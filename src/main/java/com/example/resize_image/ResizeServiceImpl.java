@@ -42,6 +42,8 @@ public class ResizeServiceImpl implements ResizeService{
         rotateImageH(bufferedImage, outputPathWithName);
         resizeCustomImage(bufferedImage, outputPathWithName);
         cropImage(bufferedImage, outputPathWithName);
+        
+        //getImagePixels(bufferedImage);
 
 
     }
@@ -106,6 +108,34 @@ public class ResizeServiceImpl implements ResizeService{
         croppedImage.flush();
         log.info("Imagem cortada com sucesso");
 
+    }
+
+    private void getImagePixels(BufferedImage srcImg){
+
+        int[][] pixels = getImageToPixels(srcImg);
+        for (int i = 0; i < pixels.length; i++) {
+            for (int j = 0; j < pixels[0].length; j++) {
+                System.out.print(pixels[i][j] + " ");
+            }
+            System.out.println();
+        }
+        log.info(""+ pixels);
+    }
+
+    private static int[][] getImageToPixels(BufferedImage bufferedImage) {
+        if (bufferedImage == null) {
+            throw new IllegalArgumentException();
+        }
+        int h = bufferedImage.getHeight();
+        int w = bufferedImage.getWidth();
+        int[][] pixels = new int[h][w];
+        for (int i = 0; i < h; i++) {
+            /**
+             * get pixels from image
+             */
+            bufferedImage.getRGB(0, i, w, 1, pixels[i], 0, w);
+        }
+        return pixels;
     }
 
     // Juntar duas imagens em uma
