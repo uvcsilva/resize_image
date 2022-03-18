@@ -42,10 +42,37 @@ public class ResizeServiceImpl implements ResizeService{
         rotateImageH(bufferedImage, outputPathWithName);
         resizeCustomImage(bufferedImage, outputPathWithName);
         cropImage(bufferedImage, outputPathWithName);
+        randomImage(bufferedImage, outputPathWithName);
+
         
         //getImagePixels(bufferedImage);
 
 
+    }
+
+    private void randomImage(BufferedImage srcImg, String outputPathWithName) throws IOException {
+
+        BufferedImage randomImg = new BufferedImage(srcImg.getWidth(), srcImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < srcImg.getHeight(); y++)
+        {
+            for (int x = 0; x < srcImg.getWidth(); x++)
+            {
+                int a = (int)(Math.random()*256);
+                int r = (int)(Math.random()*256);
+                int g = (int)(Math.random()*256);
+                int b = (int)(Math.random()*256);
+
+                int p = (a<<24) | (r<<16) | (g<<8) | b;
+
+                randomImg.setRGB(x, y, p);
+            }
+        }
+
+        File randomImageFile = new File(outputPathWithName.concat("random.png"));
+        ImageIO.write(randomImg,"png", randomImageFile);
+        randomImg.flush();
+        log.info("Imagem randomica criada com sucesso");
     }
 
     private void rotateImage(BufferedImage srcImg, String outputPathWithName) throws IOException {
