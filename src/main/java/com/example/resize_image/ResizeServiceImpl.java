@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,7 @@ public class ResizeServiceImpl implements ResizeService{
 
         rotateImage(bufferedImage, outputPathWithName);
         resizeImage(bufferedImage, outputPathWithName);
+        rotateImageH(bufferedImage, outputPathWithName);
 
 
     }
@@ -56,6 +59,19 @@ public class ResizeServiceImpl implements ResizeService{
         File rotatedImageFile = new File(outputPathWithName.concat("rotated.jpg"));
 
         ImageIO.write(destImg,"jpg", rotatedImageFile);
+        log.info("Imagem rotacionada com sucesso");
+    }
+
+    private void rotateImageH(BufferedImage srcImg, String outputPathWithName) throws IOException{
+
+        AffineTransform transf = AffineTransform.getScaleInstance(-1, 1);
+        transf.translate(-srcImg.getWidth(null), 0);
+        AffineTransformOp op = new AffineTransformOp(transf,
+                AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        BufferedImage destImg = op.filter(srcImg, null);
+
+        File rotatedHImageFile = new File(outputPathWithName.concat("rotatedH.jpg"));
+        ImageIO.write(destImg,"jpg", rotatedHImageFile);
         log.info("Imagem rotacionada com sucesso");
     }
 
