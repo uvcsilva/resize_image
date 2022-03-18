@@ -28,20 +28,13 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Metadata> uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
 
         File file = fileCheck.execute(multipartFile);
-        
+        resizeService.execute(file);
 
 
-        /*Metadata metadata = fileCheck.checkImageProperties(multipartFile);
-        log.info("[uploadFile] Metadados coletados.");
-
-        File file = fileCheck.uploadAndSaveLocal(metadata);
-        boolean result = resizeService.resizeImage(file);
-        log.info("[uploadFile] Redimensionamento finalizado com sucesso");*/
-
-        //return ResponseEntity.ok(metadata);
+        return ResponseEntity.ok(null);
     }
 
 

@@ -1,13 +1,7 @@
 package com.example.resize_image;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Setter;
 import lombok.Value;
-import org.springframework.core.io.Resource;
-
-import java.io.InputStream;
-import java.io.Serializable;
 
 @Value
 @AllArgsConstructor
