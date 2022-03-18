@@ -40,6 +40,8 @@ public class ResizeServiceImpl implements ResizeService{
         rotateImage(bufferedImage, outputPathWithName);
         resizeImage(bufferedImage, outputPathWithName);
         rotateImageH(bufferedImage, outputPathWithName);
+        resizeCustomImage(bufferedImage, outputPathWithName);
+        cropImage(bufferedImage, outputPathWithName);
 
 
     }
@@ -83,6 +85,40 @@ public class ResizeServiceImpl implements ResizeService{
         destImg.flush();
         log.info("Imagem redimensionada com sucesso");
     }
+
+    private void resizeCustomImage(BufferedImage srcImg, String outputPathWithName) throws IOException{
+
+        int width = 1920;
+        int height = 1080;
+
+        BufferedImage destImg = Scalr.resize(srcImg, Scalr.Method.BALANCED, width, height);
+        File resizedImageFile = new File(outputPathWithName.concat("resizedCustom.jpg"));
+        ImageIO.write(destImg, "jpg", resizedImageFile);
+        destImg.flush();
+        log.info("Imagem custom redimensionada com sucesso");
+    }
+
+    private void cropImage(BufferedImage srcImg, String outputPathWithName) throws IOException {
+
+        BufferedImage croppedImage = srcImg.getSubimage(300, 200, 200, 100);
+        File cropImageFile = new File(outputPathWithName.concat("cropedImage.jpg"));
+        ImageIO.write(croppedImage, "jpg", cropImageFile);
+        croppedImage.flush();
+        log.info("Imagem cortada com sucesso");
+
+    }
+
+    // Juntar duas imagens em uma
+    /*private void addImageInAnother(BufferedImage srcImg1, BufferedImage srcImg2, String outputPathWithName){
+
+        Graphics2D g2d = srcImg1.createGraphics();
+        g2d.setComposite(
+                AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        g2d.drawImage(srcImg2, 1, 1, null);
+        g2d.dispose();
+
+
+    }*/
 
     /*@Override
     public Boolean resizeImage(File sourceFile) {
