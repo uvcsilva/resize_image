@@ -2,6 +2,7 @@ package com.example.resize_image;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.imgscalr.AsyncScalr;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
+
+import static org.imgscalr.Scalr.pad;
 
 @Slf4j
 @Service
@@ -23,7 +27,7 @@ public class ResizeServiceImpl implements ResizeService{
 
     private BufferedImage bufferedImage;
 
-    public void execute(File file) throws IOException {
+    public void execute(File file) throws IOException, ExecutionException, InterruptedException {
         log.info("Rodando batch do Resize Service");
 
         BufferedImage bufferedImage;
@@ -37,16 +41,49 @@ public class ResizeServiceImpl implements ResizeService{
 
         log.info("Leitura de arquivo realizada");
 
-        rotateImage(bufferedImage, outputPathWithName);
-        resizeImage(bufferedImage, outputPathWithName);
-        rotateImageH(bufferedImage, outputPathWithName);
-        resizeCustomImage(bufferedImage, outputPathWithName);
-        cropImage(bufferedImage, outputPathWithName);
-        randomImage(bufferedImage, outputPathWithName);
+//        rotateImage(bufferedImage, outputPathWithName);
+          //resizeImage(bufferedImage, outputPathWithName);
+//        rotateImageH(bufferedImage, outputPathWithName);
+//        resizeCustomImage(bufferedImage, outputPathWithName);
+//        cropImage(bufferedImage, outputPathWithName);
+//        randomImage(bufferedImage, outputPathWithName);
+//        createThumbnail(bufferedImage, outputPathWithName);
+        asyncResize(bufferedImage, outputPathWithName);
 
-        
+
         //getImagePixels(bufferedImage);
 
+
+    }
+
+    private void asyncResize (BufferedImage srcImg, String outputPathWithName) throws IOException,
+            ExecutionException, InterruptedException {
+
+        BufferedImage destImg = AsyncScalr.resize(srcImg, 400).get();
+
+        File asyncImageFile = new File(outputPathWithName.concat("async.jpg"));
+        ImageIO.write(destImg,"jpg", asyncImageFile);
+        srcImg.flush();
+        log.info("Imagem async criada com sucesso");
+
+    }
+
+    /*ROTATE
+    BufferedImage img = ImageIO.read(new File(path));
+    BufferedImage toImg = Scalr.rotate(img, Scalr.Rotation.CW_90);*/
+
+    /*CROP
+    BufferedImage img = ImageIO.read(new File(path));
+    BufferedImage toImg = Scalr.crop(toImg,50,50,400,500);*/
+
+    private void createThumbnail(BufferedImage srcImg, String outputPathWithName) throws IOException {
+
+        BufferedImage outputImage = Scalr.resize(srcImg, Scalr.Method.SPEED, Scalr.Mode.AUTOMATIC, 300, 300, Scalr.OP_DARKER);
+        BufferedImage imgPad = pad(outputImage, 2, Color.BLACK);
+        File thumbnailImageFile = new File(outputPathWithName.concat("thumbnail.png"));
+        ImageIO.write(imgPad,"png", thumbnailImageFile);
+        srcImg.flush();
+        log.info("Imagem thumbnail criada com sucesso");
 
     }
 
@@ -108,7 +145,7 @@ public class ResizeServiceImpl implements ResizeService{
 
     private void resizeImage(BufferedImage srcImg, String outputPathWithName) throws IOException {
 
-        BufferedImage destImg = Scalr.resize(srcImg, 200);
+        BufferedImage destImg = Scalr.resize(srcImg, 400);
         File resizedImageFile = new File(outputPathWithName.concat("resized.jpg"));
         ImageIO.write(destImg, "jpg", resizedImageFile);
         destImg.flush();
