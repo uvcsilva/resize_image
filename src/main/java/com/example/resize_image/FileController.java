@@ -30,7 +30,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException,
+    public String uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException,
             ExecutionException, InterruptedException {
 
         StopWatch timeMeasure = new StopWatch();
@@ -42,7 +42,7 @@ public class FileController {
         timeMeasure.stop();
         log.info("Seconds to complete: " + timeMeasure.getTotalTimeSeconds());
 
-        return ResponseEntity.ok(null);
+        return "OK";
     }
 
 

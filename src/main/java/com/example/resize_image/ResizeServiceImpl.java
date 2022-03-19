@@ -48,7 +48,7 @@ public class ResizeServiceImpl implements ResizeService{
 //        cropImage(bufferedImage, outputPathWithName);
 //        randomImage(bufferedImage, outputPathWithName);
 //        createThumbnail(bufferedImage, outputPathWithName);
-        asyncResize(bufferedImage, outputPathWithName);
+          asyncResize(bufferedImage, outputPathWithName);
 
 
         //getImagePixels(bufferedImage);
